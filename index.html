@@ -30,6 +30,7 @@
         <span class="coin">◆</span>
         <span id="balanceValue">0</span>
       </div>
+      <button class="btn-withdraw" id="withdrawBtn" title="Вывод на карту">Вывод</button>
       <button class="btn-auth" id="authBtn">Войти</button>
       <button class="btn-settings" id="settingsBtn" title="Настройки">⚙</button>
     </div>
@@ -246,6 +247,32 @@
       </div>
       <button class="btn-primary" id="saveSettings">Сохранить</button>
       <button class="btn-danger" id="logoutBtn" style="display:none">Выйти из аккаунта</button>
+    </div>
+  </div>
+
+  <!-- Withdraw Modal (RU cards) -->
+  <div class="modal" id="withdrawModal">
+    <div class="modal-content">
+      <button class="modal-close" id="withdrawClose">×</button>
+      <h2 class="withdraw-title">Вывод на карту РФ</h2>
+      <p class="withdraw-balance">Доступно: <span id="withdrawAvail">0</span> ◆</p>
+      <div class="withdraw-form">
+        <input type="number" id="withdrawAmount" placeholder="Сумма (мин. 100 ◆)" min="100" step="50" />
+        <select id="withdrawBank">
+          <option value="">Банк получателя</option>
+          <option value="sber">Сбербанк</option>
+          <option value="tinkoff">Тинькофф</option>
+          <option value="alfa">Альфа-Банк</option>
+          <option value="vtb">ВТБ</option>
+          <option value="mir">МИР (любой)</option>
+          <option value="other">Другой банк РФ</option>
+        </select>
+        <input type="text" id="withdrawCard" placeholder="Номер карты 16 цифр" maxlength="19" autocomplete="off" inputmode="numeric" />
+        <input type="text" id="withdrawFio" placeholder="ФИО владельца карты" />
+        <button class="btn-primary" id="withdrawConfirm">Отправить на карту</button>
+        <p class="auth-msg" id="withdrawMsg"></p>
+      </div>
+      <p class="withdraw-hint">Только карты РФ (МИР / Visa / MC) · Мин. 100 ◆ · Демо-режим</p>
     </div>
   </div>
 
