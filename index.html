@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moori Устяшкинс — Казино</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Particles background -->
+  <canvas id="particles"></canvas>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-moori">MOORI</span>
+      <span class="logo-usty">УСТЯШКИНС</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-page="lobby">Лобби</button>
+      <button class="nav-btn" data-page="slots">Слоты</button>
+      <button class="nav-btn" data-page="roulette">Рулетка</button>
+      <button class="nav-btn" data-page="blackjack">Блэкджек</button>
+    </nav>
+    <div class="user-panel">
+      <div class="balance" id="balanceDisplay">
+        <span class="coin">◆</span>
+        <span id="balanceValue">0</span>
+      </div>
+      <button class="btn-auth" id="authBtn">Войти</button>
+      <button class="btn-settings" id="settingsBtn" title="Настройки">⚙</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Lobby -->
+    <section id="lobby" class="page active">
+      <div class="hero">
+        <h1 class="hero-title">
+          <span class="flicker">MOORI</span>
+          <span class="flicker delay">УСТЯШКИНС</span>
+        </h1>
+        <p class="hero-sub">Премиум браузерное казино нового поколения</p>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value" id="onlineCount">1 284</span>
+            <span class="stat-label">онлайн</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">99.2%</span>
+            <span class="stat-label">RTP</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">24/7</span>
+            <span class="stat-label">поддержка</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="games-grid">
+        <div class="game-card" data-goto="slots">
+          <div class="game-icon">🎰</div>
+          <h3>Слоты Устяшкинс</h3>
+          <p>Классические и современные автоматы с джекпотами</p>
+          <span class="play-badge">ИГРАТЬ</span>
+        </div>
+        <div class="game-card" data-goto="roulette">
+          <div class="game-icon">🎡</div>
+          <h3>Рулетка Neon</h3>
+          <p>Европейская рулетка с живыми множителями</p>
+          <span class="play-badge">ИГРАТЬ</span>
+        </div>
+        <div class="game-card" data-goto="blackjack">
+          <div class="game-icon">🃏</div>
+          <h3>Блэкджек Pro</h3>
+          <p>Классический блэкджек против дилера</p>
+          <span class="play-badge">ИГРАТЬ</span>
+        </div>
+      </div>
+
+      <div class="promo-banner">
+        <div class="promo-text">
+          <h2>Бонус при регистрации</h2>
+          <p>+5 000 ◆ на стартовый счёт + 50 бесплатных вращений</p>
+        </div>
+        <button class="btn-promo" id="promoRegBtn">Получить бонус</button>
+      </div>
+    </section>
+
+    <!-- Slots -->
+    <section id="slots" class="page">
+      <h2 class="page-title">Слоты Устяшкинс</h2>
+      <div class="slots-container">
+        <div class="slot-machine">
+          <div class="reels">
+            <div class="reel" id="reel1"><div class="symbols"></div></div>
+            <div class="reel" id="reel2"><div class="symbols"></div></div>
+            <div class="reel" id="reel3"><div class="symbols"></div></div>
+          </div>
+          <div class="slot-info">
+            <div class="bet-control">
+              <button class="bet-btn" id="betMinus">−</button>
+              <span class="bet-value">Ставка: <span id="slotBet">50</span> ◆</span>
+              <button class="bet-btn" id="betPlus">+</button>
+            </div>
+            <button class="btn-spin" id="spinBtn">КРУТИТЬ</button>
+            <div class="last-win" id="lastWin">Выигрыш: 0</div>
+          </div>
+        </div>
+        <div class="paytable">
+          <h3>Таблица выплат</h3>
+          <ul>
+            <li>🍒🍒🍒 — ×5</li>
+            <li>🍋🍋🍋 — ×8</li>
+            <li>🔔🔔🔔 — ×15</li>
+            <li>💎💎💎 — ×50</li>
+            <li>7️⃣7️⃣7️⃣ — ×100</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Roulette -->
+    <section id="roulette" class="page">
+      <h2 class="page-title">Рулетка Neon</h2>
+      <div class="roulette-container">
+        <div class="wheel-wrap">
+          <div class="wheel" id="wheel">
+            <div class="wheel-inner" id="wheelInner"></div>
+            <div class="ball" id="ball"></div>
+          </div>
+          <div class="wheel-pointer"></div>
+        </div>
+        <div class="roulette-bets">
+          <div class="bet-row">
+            <button class="r-bet" data-type="red">Красное ×2</button>
+            <button class="r-bet" data-type="black">Чёрное ×2</button>
+            <button class="r-bet" data-type="green">Зелёное ×14</button>
+          </div>
+          <div class="bet-row">
+            <button class="r-bet" data-type="even">Чёт ×2</button>
+            <button class="r-bet" data-type="odd">Нечёт ×2</button>
+          </div>
+          <div class="bet-control">
+            <button class="bet-btn" id="rBetMinus">−</button>
+            <span>Ставка: <span id="rouletteBet">100</span> ◆</span>
+            <button class="bet-btn" id="rBetPlus">+</button>
+          </div>
+          <button class="btn-spin" id="spinRoulette">КРУТИТЬ РУЛЕТКУ</button>
+          <div class="last-win" id="rouletteResult">Результат: —</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blackjack -->
+    <section id="blackjack" class="page">
+      <h2 class="page-title">Блэкджек Pro</h2>
+      <div class="bj-container">
+        <div class="bj-table">
+          <div class="dealer-area">
+            <h3>Дилер <span id="dealerScore"></span></h3>
+            <div class="cards" id="dealerCards"></div>
+          </div>
+          <div class="player-area">
+            <h3>Вы <span id="playerScore"></span></h3>
+            <div class="cards" id="playerCards"></div>
+          </div>
+        </div>
+        <div class="bj-controls">
+          <div class="bet-control">
+            <button class="bet-btn" id="bjBetMinus">−</button>
+            <span>Ставка: <span id="bjBet">100</span> ◆</span>
+            <button class="bet-btn" id="bjBetPlus">+</button>
+          </div>
+          <div class="bj-actions">
+            <button class="btn-action" id="bjDeal">Раздать</button>
+            <button class="btn-action" id="bjHit" disabled>Ещё</button>
+            <button class="btn-action" id="bjStand" disabled>Хватит</button>
+            <button class="btn-action" id="bjDouble" disabled>Удвоить</button>
+          </div>
+          <div class="last-win" id="bjResult">—</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="authModal">
+    <div class="modal-content">
+      <button class="modal-close" id="authClose">×</button>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Вход</button>
+        <button class="auth-tab" data-tab="register">Регистрация</button>
+      </div>
+      <form id="loginForm" class="auth-form active">
+        <h2>Вход в Moori</h2>
+        <input type="text" id="loginUser" placeholder="Логин" required />
+        <input type="password" id="loginPass" placeholder="Пароль" required />
+        <button type="submit" class="btn-primary">Войти</button>
+        <p class="auth-msg" id="loginMsg"></p>
+      </form>
+      <form id="registerForm" class="auth-form">
+        <h2>Регистрация</h2>
+        <input type="text" id="regUser" placeholder="Логин (мин. 3 символа)" required minlength="3" />
+        <input type="password" id="regPass" placeholder="Пароль (мин. 4 символа)" required minlength="4" />
+        <input type="password" id="regPass2" placeholder="Повторите пароль" required />
+        <button type="submit" class="btn-primary">Создать аккаунт</button>
+        <p class="auth-msg" id="regMsg"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content settings-content">
+      <button class="modal-close" id="settingsClose">×</button>
+      <h2>Настройки</h2>
+      <div class="setting-item">
+        <label>Звук эффектов</label>
+        <button class="toggle-btn active" id="soundToggle">ВКЛ</button>
+      </div>
+      <div class="setting-item">
+        <label>Мерцание / Neon</label>
+        <button class="toggle-btn active" id="flickerToggle">ВКЛ</button>
+      </div>
+      <div class="setting-item">
+        <label>Частицы фона</label>
+        <button class="toggle-btn active" id="particlesToggle">ВКЛ</button>
+      </div>
+      <div class="setting-item">
+        <label>Тема</label>
+        <select id="themeSelect">
+          <option value="neon">Neon Purple</option>
+          <option value="cyan">Cyber Cyan</option>
+          <option value="gold">Gold Luxury</option>
+          <option value="red">Blood Red</option>
+        </select>
+      </div>
+      <div class="setting-item">
+        <label>Громкость</label>
+        <input type="range" id="volumeSlider" min="0" max="100" value="70" />
+      </div>
+      <button class="btn-primary" id="saveSettings">Сохранить</button>
+      <button class="btn-danger" id="logoutBtn" style="display:none">Выйти из аккаунта</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
