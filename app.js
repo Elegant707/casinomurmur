@@ -267,6 +267,123 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
   toast('Вы вышли из аккаунта');
 });
 
+// ===== Withdraw (RU cards demo) =====
+function openWithdraw() {
+  if (!requireAuth()) return;
+  document.getElementById('withdrawAvail').textContent = balance.toLocaleString('ru-RU');
+  document.getElementById('withdrawAmount').value = '';
+  document.getElementById('withdrawBank').value = '';
+  document.getElementById('withdrawCard').value = '';
+  document.getElementById('withdrawFio').value = '';
+  document.getElementById('withdrawMsg').textContent = '';
+  document.getElementById('withdrawMsg').className = 'auth-msg';
+  document.getElementById('withdrawModal').classList.add('open');
+}
+
+function closeWithdraw() {
+  document.getElementById('withdrawModal').classList.remove('open');
+}
+
+document.getElementById('withdrawBtn').addEventListener('click', openWithdraw);
+document.getElementById('withdrawClose').addEventListener('click', closeWithdraw);
+
+// Маска карты: 1234 5678 9012 3456
+document.getElementById('withdrawCard').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '').slice(0, 16);
+  const parts = [];
+  for (let i = 0; i < v.length; i += 4) parts.push(v.slice(i, i + 4));
+  this.value = parts.join(' ');
+});
+
+// Проверка Luhn (демо)
+function luhnCheck(num) {
+  const digits = num.replace(/\D/g, '');
+  if (digits.length !== 16) return false;
+  let sum = 0;
+  let alt = false;
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let n = parseInt(digits[i], 10);
+    if (alt) {
+      n *= 2;
+      if (n > 9) n -= 9;
+    }
+    sum += n;
+    alt = !alt;
+  }
+  return sum % 10 === 0;
+}
+
+function detectCardType(num) {
+  const d = num.replace(/\D/g, '');
+  if (/^2/.test(d)) return 'МИР';
+  if (/^4/.test(d)) return 'Visa';
+  if (/^5[1-5]/.test(d) || /^2[2-7]/.test(d)) return 'Mastercard';
+  return 'Карта';
+}
+
+document.getElementById('withdrawConfirm').addEventListener('click', () => {
+  if (!requireAuth()) return;
+
+  const amount = Math.floor(+document.getElementById('withdrawAmount').value);
+  const bank = document.getElementById('withdrawBank').value;
+  const cardRaw = document.getElementById('withdrawCard').value;
+  const cardDigits = cardRaw.replace(/\D/g, '');
+  const fio = document.getElementById('withdrawFio').value.trim();
+  const msg = document.getElementById('withdrawMsg');
+
+  if (!amount || amount < 100) {
+    msg.textContent = 'Минимум 100 ◆';
+    msg.className = 'auth-msg error';
+    return;
+  }
+  if (amount > balance) {
+    msg.textContent = 'Недостаточно средств на балансе';
+    msg.className = 'auth-msg error';
+    return;
+  }
+  if (!bank) {
+    msg.textContent = 'Выберите банк';
+    msg.className = 'auth-msg error';
+    return;
+  }
+  if (cardDigits.length !== 16) {
+    msg.textContent = 'Номер карты должен быть 16 цифр';
+    msg.className = 'auth-msg error';
+    return;
+  }
+  if (!luhnCheck(cardDigits)) {
+    msg.textContent = 'Некорректный номер карты (проверьте цифры)';
+    msg.className = 'auth-msg error';
+    return;
+  }
+  if (fio.length < 5 || !fio.includes(' ')) {
+    msg.textContent = 'Укажите ФИО полностью (Имя Фамилия)';
+    msg.className = 'auth-msg error';
+    return;
+  }
+
+  balance -= amount;
+  updateBalanceDisplay();
+  saveBalance();
+  document.getElementById('withdrawAvail').textContent = balance.toLocaleString('ru-RU');
+
+  const bankNames = {
+    sber: 'Сбербанк',
+    tinkoff: 'Тинькофф',
+    alfa: 'Альфа-Банк',
+    vtb: 'ВТБ',
+    mir: 'МИР',
+    other: 'банк РФ'
+  };
+  const type = detectCardType(cardDigits);
+  const masked = cardDigits.slice(0, 4) + ' •••• •••• ' + cardDigits.slice(-4);
+
+  msg.textContent = `✓ ${amount.toLocaleString('ru-RU')} ◆ → ${bankNames[bank]} (${type} ${masked})`;
+  msg.className = 'auth-msg success';
+  toast(`Вывод ${amount.toLocaleString('ru-RU')} ◆ на карту оформлен`, 'win');
+  setTimeout(closeWithdraw, 1500);
+});
+
 // ===== Settings =====
 function openSettings() {
   document.getElementById('settingsModal').classList.add('open');
